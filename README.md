@@ -107,7 +107,7 @@ The project was executed using the Anaconda environment.
 - Installed and imported the required libraries such as Pandas, NumPy, Scikit-learn, Matplotlib, and Flask.
 - Opened the Anaconda Prompt and navigated to the environment and click on project file to open terminal.
 - Executed the application using Python commands.
-- ''' bash
+```bash
 (upi) C:\Users\jithy>e:
 
 (upi) E:\>cd E:\Final YR PROJECT\upi_fraud\upi_fraud
@@ -123,7 +123,7 @@ Press CTRL+C to quit
  * Debugger PIN: 220-851-747
 127.0.0.1 - - [03/Jun/2026 15:16:57] "GET / HTTP/1.1" 200 -
 127.0.0.1 - - [03/Jun/2026 15:16:57] "GET /favicon.ico HTTP/1.1" 404 -  
-'''
+```
 - Successfully launched the UPI Fraud Detection web interface on the local server.
 - Tested multiple transaction inputs and verified fraud prediction results through the web application.
 
