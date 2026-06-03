@@ -99,7 +99,7 @@ UPI-Transaction-Fraud-Detection/
 9. Web Application Deployment
 10. Fraud Prediction
 
-## Results
+## 📈 Results
 
 | Rank | Model | Accuracy | F1 | Status |
 |------|-------|----------|----|--------|
