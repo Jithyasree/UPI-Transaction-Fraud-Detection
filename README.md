@@ -38,7 +38,7 @@ Then open: http://localhost:5000
 - HTML
 - CSS
 
-  ## 📊 Data Analysis & Visualization
+## 📊 Data Analysis & Visualization
 
 - Transaction Amount Distribution
 - Transaction Hour Analysis
@@ -51,7 +51,7 @@ Then open: http://localhost:5000
 - Confusion Matrices
 - Learning Curves
 
-  ## 🏆 Top Performing Models
+## 🏆 Top Performing Models
 
 | Rank | Model | Accuracy |
 |--------|--------|----------|
