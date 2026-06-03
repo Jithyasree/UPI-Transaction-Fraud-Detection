@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block title %}Preprocessing{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>⚙️ Data Preprocessing</h1>
+  <p>SMOTE class balancing + PCA dimensionality reduction — as implemented in the base paper.</p>
+</div>
+
+<div class="grid-2" style="margin-bottom:24px;">
+  <div class="card">
+    <div class="card-title">🔄 SMOTE — Synthetic Minority Oversampling</div>
+    <p style="font-size:0.9rem; color:var(--muted); line-height:1.7; margin-bottom:14px;">
+      Since only ~8% of transactions are fraudulent, the dataset is highly imbalanced. 
+      SMOTE generates synthetic minority-class samples by interpolating between existing fraud examples, 
+      ensuring the model does not bias toward the majority class.
+    </p>
+    <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+      <div class="metric-card" style="flex:1; min-width:120px;">
+        <div class="metric-value" style="color:#F44336;">800</div>
+        <div class="metric-label">Fraud Before</div>
+      </div>
+      <div class="metric-card" style="flex:1; min-width:120px;">
+        <div class="metric-value" style="color:#00C853;">7,360</div>
+        <div class="metric-label">Fraud After SMOTE</div>
+      </div>
+      <div class="metric-card" style="flex:1; min-width:120px;">
+        <div class="metric-value" style="color:#2196F3;">50/50</div>
+        <div class="metric-label">Balance Achieved</div>
+      </div>
+    </div>
+    <ul style="font-size:0.88rem; color:var(--muted); padding-left:18px; line-height:1.8;">
+      <li>Training set split: 80% (8,000 samples)</li>
+      <li>Test set: 20% (2,000 samples) — kept untouched</li>
+      <li>SMOTE applied <strong>only on training set</strong> (no data leakage)</li>
+      <li>K=5 nearest neighbors for synthetic sample generation</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📉 PCA — Principal Component Analysis</div>
+    <p style="font-size:0.9rem; color:var(--muted); line-height:1.7; margin-bottom:14px;">
+      PCA reduces the dimensionality of the feature space while retaining 95% of the variance. 
+      This removes noise, handles multicollinearity, and speeds up model training.
+    </p>
+    <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+      <div class="metric-card" style="flex:1; min-width:120px;">
+        <div class="metric-value" style="color:#FF9800;">12</div>
+        <div class="metric-label">Input Features</div>
+      </div>
+      <div class="metric-card" style="flex:1; min-width:120px;">
+        <div class="metric-value" style="color:#2196F3;">~10</div>
+        <div class="metric-label">PCA Components</div>
+      </div>
+      <div class="metric-card" style="flex:1; min-width:120px;">
+        <div class="metric-value" style="color:#00C853;">95%</div>
+        <div class="metric-label">Variance Retained</div>
+      </div>
+    </div>
+    <ul style="font-size:0.88rem; color:var(--muted); padding-left:18px; line-height:1.8;">
+      <li>StandardScaler applied before PCA</li>
+      <li>PCA fitted on SMOTE-balanced training data</li>
+      <li>Same PCA transformation applied to test set</li>
+      <li>Orthogonal components → eliminates multicollinearity</li>
+    </ul>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">🔧 Full Preprocessing Pipeline</div>
+  <div style="display:flex; align-items:center; gap:0; flex-wrap:wrap; justify-content:center; padding:8px 0;">
+    {% for step, color in [('Raw Data','#E3F2FD'), ('Label Encoding','#FFF3E0'), ('80/20 Split','#E8F5E9'), ('StandardScaler','#FCE4EC'), ('SMOTE','#EDE7F6'), ('PCA (95%)','#E0F7FA'), ('10 ML Models','#E8F5E9')] %}
+    <div style="background:{{ color }}; border-radius:8px; padding:10px 16px; font-size:0.85rem; font-weight:600; color:#333; border: 1.5px solid rgba(0,0,0,0.08);">{{ step }}</div>
+    {% if not loop.last %}<div style="font-size:1.3rem; color:#90A4AE; padding:0 4px;">→</div>{% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+<div class="plot-grid">
+{% for fname, title in plots %}
+<div class="plot-card">
+  <div class="plot-title">{{ title }}</div>
+  <img src="/static/plots/{{ fname }}" alt="{{ title }}" loading="lazy">
+</div>
+{% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,102 @@
+{
+  "Gradient Boosting (XGB-equiv)": {
+    "train_accuracy": 100.0,
+    "accuracy": 99.6,
+    "precision": 98.1,
+    "recall": 96.88,
+    "f1": 97.48,
+    "roc_auc": 99.76,
+    "overfit_gap": 0.4,
+    "fit_status": "Good Fit"
+  },
+  "Random Forest": {
+    "train_accuracy": 99.97,
+    "accuracy": 99.35,
+    "precision": 94.01,
+    "recall": 98.12,
+    "f1": 96.02,
+    "roc_auc": 99.84,
+    "overfit_gap": 0.62,
+    "fit_status": "Good Fit"
+  },
+  "Extra Trees": {
+    "train_accuracy": 99.45,
+    "accuracy": 99.65,
+    "precision": 98.73,
+    "recall": 96.88,
+    "f1": 97.79,
+    "roc_auc": 99.96,
+    "overfit_gap": -0.2,
+    "fit_status": "Good Fit"
+  },
+  "AdaBoost": {
+    "train_accuracy": 99.84,
+    "accuracy": 99.35,
+    "precision": 94.55,
+    "recall": 97.5,
+    "f1": 96.0,
+    "roc_auc": 99.95,
+    "overfit_gap": 0.49,
+    "fit_status": "Good Fit"
+  },
+  "Bagging": {
+    "train_accuracy": 100.0,
+    "accuracy": 99.7,
+    "precision": 97.53,
+    "recall": 98.75,
+    "f1": 98.14,
+    "roc_auc": 99.33,
+    "overfit_gap": 0.3,
+    "fit_status": "Good Fit"
+  },
+  "Decision Tree": {
+    "train_accuracy": 99.99,
+    "accuracy": 99.35,
+    "precision": 94.55,
+    "recall": 97.5,
+    "f1": 96.0,
+    "roc_auc": 98.5,
+    "overfit_gap": 0.64,
+    "fit_status": "Good Fit"
+  },
+  "K-Nearest Neighbors": {
+    "train_accuracy": 99.97,
+    "accuracy": 99.5,
+    "precision": 98.7,
+    "recall": 95.0,
+    "f1": 96.82,
+    "roc_auc": 98.72,
+    "overfit_gap": 0.47,
+    "fit_status": "Good Fit"
+  },
+  "Support Vector Machine": {
+    "train_accuracy": 99.99,
+    "accuracy": 99.65,
+    "precision": 97.52,
+    "recall": 98.12,
+    "f1": 97.82,
+    "roc_auc": 99.98,
+    "overfit_gap": 0.34,
+    "fit_status": "Good Fit"
+  },
+  "Logistic Regression": {
+    "train_accuracy": 99.35,
+    "accuracy": 99.2,
+    "precision": 93.37,
+    "recall": 96.88,
+    "f1": 95.09,
+    "roc_auc": 99.76,
+    "overfit_gap": 0.15,
+    "fit_status": "Good Fit"
+  },
+  "Naive Bayes": {
+    "train_accuracy": 98.44,
+    "accuracy": 98.0,
+    "precision": 80.93,
+    "recall": 98.12,
+    "f1": 88.7,
+    "roc_auc": 99.87,
+    "overfit_gap": 0.44,
+    "fit_status": "Good Fit"
+  }
+}
