@@ -99,6 +99,34 @@ UPI-Transaction-Fraud-Detection/
 9. Web Application Deployment
 10. Fraud Prediction
 
+## ## ⚙️ Project Execution
+
+The project was executed using the Anaconda environment.
+
+- Uploaded all project files into the Anaconda working environment.
+- Installed and imported the required libraries such as Pandas, NumPy, Scikit-learn, Matplotlib, and Flask.
+- Opened the Anaconda Prompt and navigated to the environment and click on project file to open terminal.
+- Executed the application using Python commands.
+- ''' bash
+(upi) C:\Users\jithy>e:
+
+(upi) E:\>cd E:\Final YR PROJECT\upi_fraud\upi_fraud
+
+(upi) E:\Final YR PROJECT\upi_fraud\upi_fraud>python app.py
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 220-851-747
+127.0.0.1 - - [03/Jun/2026 15:16:57] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [03/Jun/2026 15:16:57] "GET /favicon.ico HTTP/1.1" 404 -  
+'''
+- Successfully launched the UPI Fraud Detection web interface on the local server.
+- Tested multiple transaction inputs and verified fraud prediction results through the web application.
+
 ## 📈 Results
 
 | Rank | Model | Accuracy | F1 | Status |
