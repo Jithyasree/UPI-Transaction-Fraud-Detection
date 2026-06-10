@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% block title %}Fraud Detection{% endblock %}
+{% block content %}
+
+<div class="hero">
+  <h1>UPI Fraud Detection System</h1>
+  <p>Machine Learning-powered real-time fraud detection for UPI transactions using SMOTE, PCA & ensemble models.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-val">10</div><div class="hero-stat-lbl">ML Models</div></div>
+    <div class="hero-stat"><div class="hero-stat-val">98%+</div><div class="hero-stat-lbl">Best Accuracy</div></div>
+    <div class="hero-stat"><div class="hero-stat-val">SMOTE</div><div class="hero-stat-lbl">Class Balancing</div></div>
+    <div class="hero-stat"><div class="hero-stat-val">PCA</div><div class="hero-stat-lbl">Dimensionality Reduction</div></div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <!-- PREDICTION FORM -->
+  <div class="card">
+    <div class="card-title">🔍 Detect Fraud Transaction</div>
+    <form id="predictForm">
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Transaction Amount (₹)</label>
+          <input type="number" name="transaction_amount" placeholder="e.g. 5000" step="0.01" min="1" required>
+        </div>
+        <div class="form-group">
+          <label>Avg Transaction Amount (₹)</label>
+          <input type="number" name="avg_transaction_amount" placeholder="e.g. 1200" step="0.01" min="1" required>
+        </div>
+        <div class="form-group">
+          <label>Transaction Hour (0–23)</label>
+          <input type="number" name="transaction_hour" placeholder="e.g. 14" min="0" max="23" required>
+        </div>
+        <div class="form-group">
+          <label>Transaction Frequency</label>
+          <input type="number" name="transaction_frequency" placeholder="e.g. 5" min="1" max="50" required>
+        </div>
+        <div class="form-group">
+          <label>PIN Attempts</label>
+          <input type="number" name="pin_attempts" placeholder="1–4" min="1" max="10" required>
+        </div>
+        <div class="form-group">
+          <label>Device Change Count</label>
+          <input type="number" name="device_change_count" placeholder="0–5" min="0" max="10" required>
+        </div>
+        <div class="form-group">
+          <label>New Recipient (0=No, 1=Yes)</label>
+          <select name="new_recipient">
+            <option value="0">0 — No</option>
+            <option value="1">1 — Yes</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Location Change</label>
+          <input type="number" name="location_change" placeholder="0–5" min="0" max="10" required>
+        </div>
+        <div class="form-group">
+          <label>UPI ID Age (Days)</label>
+          <input type="number" name="upi_id_age_days" placeholder="e.g. 365" min="1" max="3000" required>
+        </div>
+        <div class="form-group">
+          <label>Date of Birth Year</label>
+          <input type="number" name="dob_year" placeholder="e.g. 1995" min="1950" max="2005" required>
+        </div>
+        <div class="form-group">
+          <label>State</label>
+          <select name="state">
+            {% for s in states %}<option value="{{ s }}">{{ s }}</option>{% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Merchant Category</label>
+          <select name="merchant_category">
+            {% for c in categories %}<option value="{{ c }}">{{ c }}</option>{% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Select Model</label>
+        <select name="selected_model">
+          {% for name, r in model_results.items() | sort(attribute='1.accuracy', reverse=True) %}
+          <option value="{{ name }}" {% if name == best_model %}selected{% endif %}>
+            {{ name }} — {{ r.accuracy }}% accuracy
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg">🔍 Detect Fraud</button>
+    </form>
+  </div>
+
+  <!-- RESULT + QUICK STATS -->
+  <div>
+    <div id="loadingSpinner">
+      <div class="spinner"></div>
+      <p style="color: var(--muted);">Analyzing transaction...</p>
+    </div>
+    <div id="resultBox" style="display:none;"></div>
+
+    <div class="card" style="margin-top:0;">
+      <div class="card-title">🏆 Model Leaderboard (Top 5)</div>
+      <table>
+        <thead><tr><th>#</th><th>Model</th><th>Accuracy</th><th>F1</th><th>Status</th></tr></thead>
+        <tbody>
+          {% for name, r in model_results.items() | sort(attribute='1.accuracy', reverse=True) %}
+          {% if loop.index <= 5 %}
+          <tr>
+            <td><strong>{{ loop.index }}</strong></td>
+            <td>{{ name }}</td>
+            <td><span class="badge badge-info">{{ r.accuracy }}%</span></td>
+            <td>{{ r.f1 }}%</td>
+            <td>
+              {% if r.fit_status == 'Good Fit' %}<span class="badge badge-good">✓ Good Fit</span>
+              {% elif r.fit_status == 'Overfitting' %}<span class="badge badge-over">⚠ Overfit</span>
+              {% else %}<span class="badge badge-under">↓ Underfit</span>{% endif %}
+            </td>
+          </tr>
+          {% endif %}{% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">ℹ️ About This System</div>
+      <p style="font-size:0.9rem; color:var(--muted); line-height:1.65;">
+        Based on the research paper <em>"Secure UPI: Machine Learning-Driven Fraud Detection System for UPI Transactions"</em> (ICDT 2024). 
+        Features SMOTE class balancing, PCA dimensionality reduction, and 10 trained classifiers evaluated with accuracy, F1, ROC-AUC, and overfitting diagnostics.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('predictForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const spinner = document.getElementById('loadingSpinner');
+  const resultBox = document.getElementById('resultBox');
+  spinner.style.display = 'block';
+  resultBox.style.display = 'none';
+
+  const formData = new FormData(e.target);
+  try {
+    const res = await fetch('/predict', { method: 'POST', body: formData });
+    const data = await res.json();
+    spinner.style.display = 'none';
+    if (data.error) {
+      resultBox.innerHTML = `<div class="result-box" style="background:#FF9800;color:white;"><div class="result-icon">⚠️</div><div class="result-title">Error</div><div class="result-sub">${data.error}</div></div>`;
+    } else {
+      const isFraud = data.prediction === 1;
+      const pct = isFraud ? data.fraud_probability : data.legitimate_probability;
+      resultBox.innerHTML = `
+        <div class="result-box ${isFraud ? 'result-fraud' : 'result-legit'}">
+          <div class="result-icon">${isFraud ? '🚨' : '✅'}</div>
+          <div class="result-title">${isFraud ? 'FRAUD DETECTED!' : 'LEGITIMATE TRANSACTION'}</div>
+          <div class="result-sub">
+            ${isFraud ? `Fraud probability: <strong>${data.fraud_probability}%</strong>` : `Safe probability: <strong>${data.legitimate_probability}%</strong>`}
+            <br>Model: <strong>${data.model_used}</strong> (${data.model_accuracy}% accuracy)
+          </div>
+          <div class="prob-bar"><div class="prob-fill" style="width:${pct}%"></div></div>
+        </div>`;
+    }
+    resultBox.style.display = 'block';
+  } catch (err) {
+    spinner.style.display = 'none';
+    resultBox.innerHTML = `<div class="result-box" style="background:#ccc;"><strong>Request failed.</strong></div>`;
+    resultBox.style.display = 'block';
+  }
+});
+</script>
+{% endblock %}

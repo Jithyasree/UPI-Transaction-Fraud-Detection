@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block title %}Models{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>🤖 All 10 Models — Detailed Results</h1>
+  <p>Confusion matrices, learning curves, and per-model metrics including overfitting/underfitting analysis.</p>
+</div>
+
+<!-- SUMMARY TABLE -->
+<div class="card">
+  <div class="card-title">📋 Model Performance Summary</div>
+  <div style="overflow-x:auto;">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th><th>Model</th>
+        <th>Train Acc</th><th>Test Acc</th>
+        <th>Precision</th><th>Recall</th>
+        <th>F1</th><th>ROC-AUC</th>
+        <th>Gap</th><th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for name, r in sorted_results %}
+    <tr>
+      <td><strong>{{ loop.index }}</strong></td>
+      <td style="font-weight:600;">{{ name }}</td>
+      <td>{{ r.train_accuracy }}%</td>
+      <td><span class="badge badge-info">{{ r.accuracy }}%</span></td>
+      <td>{{ r.precision }}%</td>
+      <td>{{ r.recall }}%</td>
+      <td><span class="badge badge-success">{{ r.f1 }}%</span></td>
+      <td>{{ r.roc_auc }}%</td>
+      <td>
+        <span style="color:{% if r.overfit_gap > 10 %}#C62828{% elif r.overfit_gap < 0 %}#E65100{% else %}#2E7D32{% endif %}; font-weight:600;">
+          {{ r.overfit_gap }}%
+        </span>
+      </td>
+      <td>
+        {% if r.fit_status == 'Good Fit' %}<span class="badge badge-good">✓ Good Fit</span>
+        {% elif r.fit_status == 'Overfitting' %}<span class="badge badge-over">⚠ Overfit</span>
+        {% else %}<span class="badge badge-under">↓ Underfit</span>{% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- PER-MODEL DETAILS -->
+{% for name, r in sorted_results %}
+<div class="card">
+  <div class="card-title">
+    {{ loop.index }}. {{ name }}
+    {% if r.fit_status == 'Good Fit' %}<span class="badge badge-good">✓ Good Fit</span>
+    {% elif r.fit_status == 'Overfitting' %}<span class="badge badge-over">⚠ Overfitting</span>
+    {% else %}<span class="badge badge-under">↓ Underfitting</span>{% endif %}
+  </div>
+  <div class="grid-4" style="margin-bottom:16px;">
+    <div class="metric-card">
+      <div class="metric-value" style="color:#1565C0;">{{ r.accuracy }}%</div>
+      <div class="metric-label">Test Accuracy</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value" style="color:#00C853;">{{ r.f1 }}%</div>
+      <div class="metric-label">F1 Score</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value" style="color:#FF9800;">{{ r.recall }}%</div>
+      <div class="metric-label">Recall</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value" style="color:#9C27B0;">{{ r.roc_auc }}%</div>
+      <div class="metric-label">ROC-AUC</div>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="plot-card">
+      <div class="plot-title">Confusion Matrix</div>
+      <img src="/static/{{ cm_plots[name] }}" alt="CM {{ name }}" loading="lazy">
+    </div>
+    <div class="plot-card">
+      <div class="plot-title">Learning Curve (Overfit Check)</div>
+      <img src="/static/{{ lc_plots[name] }}" alt="LC {{ name }}" loading="lazy">
+    </div>
+  </div>
+  <div style="background:var(--bg); border-radius:8px; padding:12px 16px; margin-top:12px; font-size:0.87rem; color:var(--muted);">
+    <strong>Overfitting Analysis:</strong> Train accuracy = <strong>{{ r.train_accuracy }}%</strong>, 
+    Test accuracy = <strong>{{ r.accuracy }}%</strong>, Gap = <strong>{{ r.overfit_gap }}%</strong>
+    {% if r.fit_status == 'Good Fit' %} — Model generalises well.
+    {% elif r.fit_status == 'Overfitting' %} — Gap >10%, model may be overfitting training data.
+    {% else %} — Low accuracy, model may be underfitting.{% endif %}
+  </div>
+</div>
+{% endfor %}
+{% endblock %}
